@@ -1,4 +1,4 @@
-![DropByte MSG](https://files.catbox.moe/ejkw30.png)
+![DropByte MSG]([https://files.catbox.moe/ejkw30.png](https://files.catbox.moe/o2001z.png))
 
 # DropByte MSG
 
