@@ -123,7 +123,7 @@ dropbyte-msg/
 │
 ├── plugins/
 │   ├── command/                 ← Main commands
-│   │   └── menu.js              → .menu .mani
+│   │   └── menu.js              → .menu
 │   │
 │   ├── owner/                   ← Owner-only commands
 │   │   ├── eval.js              → .eval .> .$ .q
@@ -309,14 +309,11 @@ dropbyte-msg/
 
 ```bash
 git clone <repo-url>
-cd dropbyte-msg
+cd repo-name
 npm install
 node index.js
 ```
 
-On first run, enter your WA number to receive a **pairing code**. Then enter the code in WhatsApp via Settings → Linked Devices → Link with Phone Number.
-
-After pairing, **restart the bot once** so messages start being read.
 
 ---
 
@@ -324,7 +321,7 @@ After pairing, **restart the bot once** so messages start being read.
 
 ```bash
 npm install -g pm2
-pm2 start index.js --name dropbyte-msg
+pm2 start index.js --name repo-name
 pm2 save && pm2 startup
 ```
 
@@ -393,10 +390,10 @@ Uses two databases running in parallel. **SQLite** for main user data, group set
 
 ## Changelog
 
-**DropByte MSG v3.0.0** *(2025–2026, current)*
+**DropByte MSG v3.0.0** *(2026, current)*
 Rebranding, hybrid architecture, tax & accounting modules, student tools, RPG system, anonymous menfess, hot reload, canvas terminal dashboard, KPR calculator, 100+ RPG item master data.
 
-**Shota Base v2.x.x** *(2024)*
+**Shota Base v2.x.x** *(2026)*
 Modular plugin system, migration to pairing code, multi-owner, SQLite database.
 
 **v1.x.x** *(2023)*
@@ -442,7 +439,7 @@ Not for distribution or publication without permission.
 
 **DropByte MSG**
 
-*2022 – 2026 · Still in Development · Built with ❤️*
+*2022 – 2026 · Still in Development*
 
 *"Not perfect, but always improving."*
 
