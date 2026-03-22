@@ -18,310 +18,417 @@
 
 <br>
 
-*"Dari eksperimen kecil di 2022 — terus tumbuh hingga sekarang."*
+*"From a small experiment in 2022 — growing ever since."*
 
 </div>
 
 ---
 
-## Overview
+## About
 
-**DropByte MSG** adalah WhatsApp Bot Multi Device yang telah berjalan sejak 2022, melewati banyak perubahan nama, sistem, dan arsitektur mengikuti perkembangan teknologi. Dibangun di atas **Shota Base** sebagai fondasi, kemudian dikembangkan secara bertahap dengan fitur-fitur custom.
+**DropByte MSG** is a Multi Device WhatsApp Bot that has been running since **2022**, going through many changes in name, system, and architecture following the evolution of WhatsApp's ecosystem and Baileys library updates.
 
-Bot ini masih dalam tahap pengembangan aktif. Beberapa fitur mungkin belum sempurna dan terus diperbaiki secara berkala. Repository bersifat **private**.
+Built on top of **Shota Base** as its foundation, then gradually developed with custom features. The bot is still in active development — some features may not be perfect and bugs are being fixed regularly.
 
----
-
-## Perjalanan
-
-```
-2022  Awal Pengembangan — eksperimen pertama, nama & sistem sering berganti
-2023  Penstabilan — sistem plugin diperkenalkan
-2024  Refactor — arsitektur hybrid, database lebih terstruktur  
-2026  Penambahan modul tax, accountan, tools mahasiswa
-2026  Rebranding → DropByte MSG, pengembangan lanjutan
-```
+**Repository is private and not publicly available.**
 
 ---
 
-## Tujuan
+## Project Timeline
 
-Membangun bot WhatsApp yang fungsional, modular, dan mudah dikembangkan. Menyediakan fitur yang berguna untuk kebutuhan sehari-hari sekaligus menjadi media eksplorasi teknologi Node.js dan ekosistem Baileys. Dirancang sebagai fondasi solid untuk pengembangan fitur lebih lanjut ke depan.
+```
+2022  Founded — first experiments, name & system changed frequently
+2023  Stabilized — plugin system introduced
+2024  Major refactor — hybrid architecture, structured database
+2025  Added tax, accounting & student tools modules
+2026  Rebranding → DropByte MSG, ongoing development
+```
+
+---
+
+## Goals
+
+- Build a functional, modular, and easily extendable WhatsApp bot
+- Provide features useful for everyday needs
+- Explore and learn the Node.js & Baileys ecosystem
+- Serve as a solid foundation for future feature development
+
+> ⚠️ **Disclaimer:** This bot is still in active development. Some features may not work perfectly. Bugs found will be fixed gradually.
+
+```
+  Total Plugins   : 65+ features
+  Categories      : 10 categories
+  Database        : SQLite + JSON
+  Module System   : ESM (import/export)
+  Login Method    : Pairing Code (no QR)
+  Status          : Active Development 🔧
+```
 
 ---
 
 ## Tech Stack
 
-Runtime yang digunakan adalah **Node.js v18+** dengan protokol **@whiskeysockets/baileys** (wileys fork). Menggunakan sistem module **ESM** (import/export), database **SQLite** untuk data utama dan **JSON flat-file** untuk data RPG. Media diproses menggunakan FFmpeg, canvas, dan jimp.
+```
+  Runtime          Node.js v18+
+  WhatsApp         @whiskeysockets/baileys (wileys fork)
+  Module System    ESM — import / export
+  Database         SQLite3 (main data) + JSON (RPG)
+  Media Processing FFmpeg + canvas + jimp + node-webpmux
+  Terminal UI      chalk (colored logs)
+  HTTP Client      axios + node-fetch
+  Date & Time      moment-timezone
+  System Info      node-os-utils + os
+```
 
 ---
 
-## Struktur Proyek
+## Features
+
+| | Category | Description |
+|---|---|---|
+| 🔌 | System | Modular plugins, hot reload, auto-detect menu |
+| 🔐 | Auth | Pairing code login, multi-owner, public/self mode |
+| ⚔️ | RPG | Hunt, battle, shop, inventory, leaderboard, Terra economy |
+| 🧾 | Tax | PPh 21/23/25, PPN, PPnBM, UMKM, PTKP, 2024 tax reference |
+| 📊 | Accounting | BEP, COGS, P&L, depreciation, financial ratios, bank reconciliation |
+| 🎓 | Student | GPA calculator, target grade, cumulative GPA, research sampling |
+| 💬 | Social | Anonymous menfess & reply system |
+| 💳 | Financial | KPR / vehicle loan installment calculator |
+| 📁 | File Manager | Manage plugins & server files directly via WA |
+| 🖼️ | Media | Sticker, video convert, voice note, upload to URL |
+
+---
+
+## Project Structure
 
 ```
 dropbyte-msg/
 │
-├── index.js          — Entry point, koneksi Baileys, pairing code
-├── settings.js       — Konfigurasi global (nama bot, owner, gambar, dll)
-├── case.js           — Fallback command sederhana (switch-case)
+├── index.js                     ← Entry point, Baileys connection, pairing code
+├── settings.js                  ← Global bot config (hot-reload)
+├── case.js                      ← Fallback switch-case commands
+├── package.json
 │
 ├── src/
-│   ├── handler.js    — Message handler utama, routing, logging terminal
-│   └── plugins.js    — Plugin loader rekursif, stats, getMenuData
+│   ├── handler.js               ← Main message handler, routing, terminal logging
+│   └── plugins.js               ← Recursive plugin loader, stats, getMenuData
 │
 ├── lib/
-│   ├── config.js     — Serializer pesan Baileys → objek m
-│   ├── database.js   — SQLite helper (users, groups, settings)
-│   ├── function.js   — Utility functions global
-│   ├── items.js      — Master data item RPG + emoji konsisten
-│   ├── rpg-json.js   — RPG database JSON helper
-│   └── webp.js       — Konversi media ke WebP untuk sticker
+│   ├── config.js                ← Baileys message serializer → m object
+│   ├── database.js              ← SQLite helper (users, groups, settings)
+│   ├── function.js              ← Global utility functions
+│   ├── items.js                 ← RPG item master data + consistent emoji
+│   ├── rpg-json.js              ← RPG JSON database helper
+│   └── webp.js                  ← Media to WebP converter for stickers
 │
 ├── plugins/
-│   ├── command/      — Perintah utama (.menu)
-│   ├── owner/        — Perintah khusus owner
-│   ├── files/        — File & plugin manager via WA
-│   ├── other/        — Fitur umum (ping, sticker, menfess, dll)
-│   ├── tools/        — Konversi media
-│   ├── grup/         — Manajemen grup
-│   ├── rpg/          — Sistem RPG & ekonomi
-│   ├── pajak/        — Kalkulator perpajakan
-│   ├── akuntansi/    — Akuntansi & perbankan
-│   └── mahasiswa/    — Tools akademik mahasiswa
+│   ├── command/                 ← Main commands
+│   │   └── menu.js              → .menu .mani
+│   │
+│   ├── owner/                   ← Owner-only commands
+│   │   ├── eval.js              → .eval .> .$ .q
+│   │   ├── backup.js            → .backup
+│   │   ├── restart.js           → .restart
+│   │   ├── modebot.js           → .mode
+│   │   ├── prefix.js            → .prefix .setprefix
+│   │   ├── addown.js            → .addow
+│   │   ├── delown.js            → .delown
+│   │   ├── listown.js           → .listown
+│   │   └── clear-sesions.js     → .clearsesion
+│   │
+│   ├── files/                   ← File & plugin manager via WA
+│   │   ├── addplugin.js         → .addplugin
+│   │   ├── delplugin.js         → .delplugin
+│   │   ├── getplugin.js         → .getplugin
+│   │   ├── listplugin.js        → .listplugin
+│   │   ├── ganti-file.js        → .gantifile
+│   │   ├── get-file.js          → .getfile
+│   │   └── list-file.js         → .listfile
+│   │
+│   ├── other/                   ← General features
+│   │   ├── ping.js              → .ping .os
+│   │   ├── sticker.js           → .sticker .s
+│   │   ├── tourl.js             → .tourl
+│   │   ├── runtime.js           → .runtime .rt
+│   │   ├── totalfitur.js        → .totalfitur
+│   │   ├── script.js            → .script
+│   │   ├── tqto.js              → .tqto
+│   │   ├── menfess.js           → .menfess .confess
+│   │   ├── balas.js             → .balas
+│   │   └── cicilan.js           → .cicilan .kpr
+│   │
+│   ├── tools/                   ← Media conversion
+│   │   ├── toimage.js           → .toimage
+│   │   ├── tovid.js             → .tovid
+│   │   ├── tovn.js              → .tovn .toptt
+│   │   ├── tolid.js             → .tolid
+│   │   └── get.js               → .get
+│   │
+│   ├── grup/                    ← Group management
+│   │   └── antilinkgc.js        → .antilink
+│   │
+│   ├── rpg/                     ← RPG & economy system
+│   │   ├── profile.js           → .profile .me
+│   │   ├── inventory.js         → .inv .inventory
+│   │   ├── hunt.js              → .hunt .berburu
+│   │   ├── work.js              → .work .kerja
+│   │   ├── battle.js            → .battle .fight
+│   │   ├── daily.js             → .daily .harian
+│   │   ├── rest.js              → .rest .istirahat
+│   │   ├── shop.js              → .shop .beli
+│   │   ├── use.js               → .use .pakai
+│   │   ├── leaderboard.js       → .lb .top
+│   │   └── levelup.js           → .level .lvl
+│   │
+│   ├── pajak/                   ← Indonesian tax calculators
+│   │   ├── pph21.js             → .pph21
+│   │   ├── pph23.js             → .pph23
+│   │   ├── pph25.js             → .pph25 .angsuran
+│   │   ├── pphumkm.js           → .pphumkm .umkm
+│   │   ├── ppn.js               → .ppn
+│   │   ├── ppnbm.js             → .ppnbm
+│   │   ├── ptkp.js              → .ptkp
+│   │   └── tarifpph.js          → .tarifpph .infopajak
+│   │
+│   ├── akuntansi/               ← Accounting & banking
+│   │   ├── bep.js               → .bep .breakeven
+│   │   ├── hpp.js               → .hpp .cogs
+│   │   ├── labarugi.js          → .labarugi .pl
+│   │   ├── depresiasi.js        → .depresiasi .penyusutan
+│   │   ├── rasio.js             → .rasio .ratio
+│   │   ├── bunga.js             → .bunga .interest
+│   │   ├── rekonsiliasi.js      → .rekonsiliasi .rekon
+│   │   └── jurnal.js            → .jurnal
+│   │
+│   └── mahasiswa/               ← Academic student tools
+│       ├── ipk.js               → .ipk .ip
+│       ├── konversinilai.js     → .konversi .grade
+│       ├── targetuas.js         → .targetuas .uas
+│       ├── targetipk.js         → .targetipk
+│       └── sampling.js          → .sampling .sampel
 │
 ├── data/
-│   ├── database.db   — SQLite (auto-created)
-│   ├── rpg.json      — Data RPG JSON (auto-created)
-│   └── owner.json    — Daftar owner tambahan
+│   ├── database.db              ← SQLite (auto-created)
+│   ├── rpg.json                 ← RPG JSON data (auto-created)
+│   ├── owner.json               ← Additional owners list
+│   └── trash/                   ← Temporary media files
 │
-└── Auth/             — Session Baileys (auto-created saat pairing)
+└── Auth/                        ← Baileys session (auto-created on pairing)
 ```
----
-## Fitur
 
-| | Kategori | Deskripsi |
+---
+
+## Commands
+
+### 📌 Main
+`.menu` — show all commands (auto-detect)
+
+---
+
+### 🍉 Owner
+`.eval` · `.restart` · `.backup` · `.mode` · `.setprefix` · `.addow` · `.delown` · `.listown` · `.clearsesion`
+
+---
+
+### 📁 File Manager
+`.addplugin` · `.delplugin` · `.getplugin` · `.listplugin` · `.gantifile` · `.getfile` · `.listfile`
+
+---
+
+### 🍓 Other
+`.ping` · `.sticker` · `.tourl` · `.runtime` · `.totalfitur` · `.menfess` · `.balas` · `.cicilan`
+
+---
+
+### 🔖 Tools
+`.toimage` · `.tovid` · `.tovn` · `.tolid` · `.get`
+
+---
+
+### ⚔️ RPG
+
+| Command | Cooldown | Description |
 |---|---|---|
-| 🔌 | Sistem | Plugin modular, hot reload, menu auto-detect dari plugin ter-load |
-| 🔐 | Auth | Login via pairing code, multi-owner, mode public/self |
-| ⚔️ | RPG | Hunt, battle, shop, inventory, leaderboard, sistem ekonomi Terra |
-| 🧾 | Perpajakan | PPh 21/23/25, PPN, PPnBM, UMKM, PTKP, referensi tarif 2024 |
-| 📊 | Akuntansi | BEP, HPP, laba rugi, depresiasi, rasio keuangan, rekonsiliasi bank |
-| 🎓 | Mahasiswa | IP/IPK, target UAS, target IPK kumulatif, sampling penelitian |
-| 💬 | Sosial | Menfess & sistem balas anonim antar pengguna |
-| 💳 | Finansial | Kalkulator cicilan KPR, kredit motor/mobil |
-| 📁 | File Manager | Kelola plugin & file server langsung lewat WA |
-| 🖼️ | Media | Sticker, konversi video, voice note, upload ke URL |
+| `.profile` | — | View profile & character stats |
+| `.inventory` | — | View items grouped by category |
+| `.daily` | 24h | Claim daily reward |
+| `.hunt` | 30s | Hunt for random loot |
+| `.work` | 1h | Work to earn Terra & bonus items |
+| `.battle` | 1m | Fight monsters, scaled by level |
+| `.rest` | 15m | Restore HP & Stamina |
+| `.shop` | — | Browse item shop |
+| `.shop <item>` | — | Buy item from shop |
+| `.use <item>` | — | Use a consumable item |
+| `.leaderboard` | — | Player ranking by Terra |
 
 ---
 
-## Daftar Perintah
+### 🧾 Tax
 
-### General
-`.menu` — tampilkan semua menu (auto-detect)
-
----
-
-### Owner
-`.eval` `.restart` `.backup` `.mode` `.setprefix` `.addow` `.delown` `.listown` `.clearsesion`
-
----
-
-### File Manager
-`.addplugin` `.delplugin` `.getplugin` `.listplugin` `.gantifile` `.getfile` `.listfile`
-
----
-
-### Other
-`.ping` `.sticker` `.tourl` `.runtime` `.totalfitur` `.menfess` `.balas` `.cicilan`
-
----
-
-### Tools
-`.toimage` `.tovid` `.tovn` `.tolid` `.get`
-
----
-
-### RPG For Fun
-
-| Perintah | Cooldown | Keterangan |
-|---|---|---|
-| `.profile` | — | Profil & statistik karakter |
-| `.inventory` | — | Inventaris item dikelompokkan per kategori |
-| `.daily` | 24 jam | Klaim hadiah harian |
-| `.hunt` | 30 detik | Berburu — dapat loot item acak |
-| `.work` | 1 jam | Kerja — dapat Terra & item bonus |
-| `.battle` | 1 menit | Lawan monster, skalabel dengan level |
-| `.rest` | 15 menit | Pulihkan HP & Stamina |
-| `.shop` | — | Lihat toko item |
-| `.shop <item>` | — | Beli item dari toko |
-| `.use <item>` | — | Pakai item konsumable |
-| `.leaderboard` | — | Ranking pemain berdasarkan Terra |
-
----
-
-### Tax menu
-
-| Perintah | Keterangan |
+| Command | Description |
 |---|---|
-| `.pph21` | PPh 21 karyawan — tarif progresif, PTKP, biaya jabatan |
-| `.pph23` | PPh 23 — dividen, jasa, royalti, sewa |
-| `.pph25` | Angsuran PPh 25 bulanan |
-| `.pphumkm` | PPh Final UMKM 0,5% — cek batas omzet |
-| `.ppn` | PPN 11% atau tarif custom |
-| `.ppnbm` | PPnBM barang mewah 10%–75% |
-| `.ptkp` | Cek PTKP atau tampilkan tabel lengkap |
-| `.tarifpph` | Referensi semua tarif pajak 2024 |
+| `.pph21` | Employee income tax — progressive rate, PTKP, occupational deduction |
+| `.pph23` | Withholding tax — dividends 15%, services/rent 2% |
+| `.pph25` | Monthly PPh 25 installment |
+| `.pphumkm` | UMKM final tax 0.5% — checks 500M limit |
+| `.ppn` | VAT 11% or custom rate |
+| `.ppnbm` | Luxury goods tax 10%–75% |
+| `.ptkp` | Check PTKP or view full table |
+| `.tarifpph` | Complete 2024 tax rate reference |
 
 ---
 
-### Accounting & Perbankan
+### 📊 Accounting & Banking
 
-| Perintah | Keterangan |
+| Command | Description |
 |---|---|
-| `.bep` | Break Even Point unit & rupiah + simulasi target laba |
-| `.hpp` | Harga Pokok Penjualan |
-| `.labarugi` | Simulasi laporan laba rugi + PPh Badan |
-| `.depresiasi` | Penyusutan aset — Garis Lurus, Saldo Menurun, SYD |
-| `.rasio` | 10 rasio keuangan — likuiditas, solvabilitas, profitabilitas |
-| `.bunga` | Bunga bank — flat, efektif, anuitas, deposito, compound |
-| `.rekonsiliasi` | Rekonsiliasi bank + jurnal penyesuaian otomatis |
-| `.jurnal` | Panduan jurnal 12 jenis transaksi perbankan |
+| `.bep` | Break Even Point in units & rupiah + profit target simulation |
+| `.hpp` | Cost of Goods Sold |
+| `.labarugi` | P&L statement simulation + corporate tax |
+| `.depresiasi` | Asset depreciation — Straight Line, Declining Balance, SYD |
+| `.rasio` | 10 financial ratios — liquidity, solvency, profitability, activity |
+| `.bunga` | Bank interest — flat, effective, annuity, deposit, compound |
+| `.rekonsiliasi` | Bank reconciliation + automatic adjusting entries |
+| `.jurnal` | Journal entry guide for 12 types of bank transactions |
 
 ---
 
-### Mahasiswa
+### 🎓 Student Tools
 
-| Perintah | Keterangan |
+| Command | Description |
 |---|---|
-| `.ipk` | Hitung IP semester dari daftar matkul |
-| `.konversi` | Konversi nilai angka → huruf → bobot 4.0/5.0 |
-| `.targetuas` | Nilai UAS minimal + simulasi semua skenario |
-| `.targetipk` | IP yang dibutuhkan untuk capai target IPK kumulatif |
-| `.sampling` | Ukuran sampel — Slovin, Krejcie & Morgan, Cochran |
+| `.ipk` | Calculate semester GPA from subject list |
+| `.konversi` | Convert grade number → letter → 4.0/5.0 scale |
+| `.targetuas` | Minimum final exam score needed + scenario simulation |
+| `.targetipk` | GPA needed next semester to reach cumulative target |
+| `.sampling` | Sample size — Slovin, Krejcie & Morgan, Cochran |
 
 ---
 
-## Instalasi
+## Installation
 
 ```bash
 git clone <repo-url>
-cd repo-name
+cd dropbyte-msg
 npm install
 node index.js
 ```
 
+On first run, enter your WA number to receive a **pairing code**. Then enter the code in WhatsApp via Settings → Linked Devices → Link with Phone Number.
+
+After pairing, **restart the bot once** so messages start being read.
 
 ---
 
-## Menjalankan dengan PM2
+## Run with PM2
 
 ```bash
 npm install -g pm2
-pm2 start index.js --name repo-name
+pm2 start index.js --name dropbyte-msg
 pm2 save && pm2 startup
 ```
 
 ---
 
-## Konfigurasi
+## Configuration
 
-Semua pengaturan ada di `settings.js`. File ini mendukung hot reload — perubahan langsung aktif tanpa restart. Yang bisa dikonfigurasi: nomor owner, nama bot, versi, gambar thumbnail, gambar reply, dan pesan penolakan otomatis.
+All settings are in `settings.js`. This file supports hot reload — changes apply instantly without restart. Configurable: owner numbers, bot name, version, thumbnail image, reply image, and auto-rejection messages.
 
-Prefix dan mode bot dapat diubah langsung lewat perintah dan tersimpan ke database.
+Prefix and bot mode can be changed via commands and are saved to the database.
 
 ---
 
-## Sistem Plugin
+## Plugin System
 
-Setiap fitur adalah file `.js` terpisah di dalam folder `plugins/`. Diload secara otomatis dan rekursif — termasuk semua subfolder. Plugin baru langsung aktif tanpa restart dan otomatis muncul di menu.
+Each feature is a separate `.js` file inside the `plugins/` folder. Loaded automatically and recursively — including all subfolders. New plugins are active immediately without restart and automatically appear in the menu.
 
 ---
 
 ## Hot Reload
 
-Bot menggunakan `fs.watchFile` pada semua file utama. Jika file diubah, bot otomatis reload tanpa perlu restart penuh. Berlaku untuk semua file konfigurasi, handler, dan plugin.
+Bot uses `fs.watchFile` on all main files. If a file is changed, the bot automatically reloads it without a full restart. Applies to all config files, handlers, and plugins.
 
 ---
 
 ## Database
 
-Menggunakan dua database yang bekerja paralel. **SQLite** untuk data utama pengguna, pengaturan grup, prefix, dan mode bot. **JSON flat-file** untuk data RPG yang lebih fleksibel seperti inventory, cooldown, dan quest.
-
----
-
-## Deployment
-
-Bisa dijalankan di VPS Linux, Pterodactyl panel, Railway, Render, atau Heroku. Procfile sudah disertakan untuk platform berbasis Heroku. Untuk Docker, cukup base image Node.js dengan FFmpeg.
+Uses two databases running in parallel. **SQLite** for main user data, group settings, prefix, and bot mode. **JSON flat-file** for more flexible RPG data such as inventory, cooldowns, and quests.
 
 ---
 
 ## Troubleshooting
 
-**Pesan tidak terbaca setelah pairing** — restart bot sekali, ini known bug dari Baileys.
+**Messages not read after pairing** — restart bot once, this is a known Baileys bug.
 
-**Module tidak ditemukan** — jalankan `npm install` ulang.
+**Module not found** — run `npm install` again.
 
-**Plugin tidak muncul di menu** — pastikan file memiliki `handler.command` dan `export default`.
+**Plugin not showing in menu** — make sure the file has `handler.command` and `export default`.
 
-**Session expired** — hapus folder `Auth/` dan jalankan ulang untuk pairing baru.
+**Session expired** — delete the `Auth/` folder and re-pair.
 
 ---
 
 ## FAQ
 
-**Bisa dijalankan di Termux?**
-Bisa, tapi tidak direkomendasikan untuk production. Gunakan VPS atau panel hosting.
+**Can it run on Termux?** Yes, but not recommended for production. Use VPS or hosting panel.
 
-**Cara backup data?**
-Backup folder `data/` dan `Auth/`. Atau gunakan perintah `.backup`.
+**How to backup data?** Backup the `data/` and `Auth/` folders, or use the `.backup` command.
 
-**Prefix berubah setelah restart?**
-Prefix disimpan di database. Pastikan folder `data/` tidak terhapus.
+**Prefix resets after restart?** Prefix is stored in the database. Make sure the `data/` folder is not deleted.
 
-**Cara tambah kategori menu baru?**
-Buat subfolder baru di `plugins/`. Otomatis terbaca dan muncul di menu.
+**How to add a new menu category?** Create a new subfolder in `plugins/`. It's automatically detected and shown in the menu.
 
 ---
 
 ## Roadmap
 
-- [ ] Sistem quest & misi RPG
-- [ ] Cek harga kripto real-time
-- [ ] Konversi mata uang real-time
-- [ ] Group management lebih lengkap (welcome, kick, promote)
-- [ ] Anti-spam & rate limiter per pengguna
-- [ ] Perbaikan bug & stabilisasi
+- [ ] RPG quest & mission system
+- [ ] Real-time crypto price checker
+- [ ] Real-time currency conversion
+- [ ] Full group management (welcome, kick, promote)
+- [ ] Anti-spam & per-user rate limiter
+- [ ] Bug fixes & stabilization
 
 ---
 
 ## Changelog
 
-**DropByte MSG v3.0.0** *(2026)*
-Rebranding, arsitektur hybrid, modul pajak & akuntansi, tools mahasiswa, RPG, menfess, hot reload, terminal dashboard canvas.
+**DropByte MSG v3.0.0** *(2025–2026, current)*
+Rebranding, hybrid architecture, tax & accounting modules, student tools, RPG system, anonymous menfess, hot reload, canvas terminal dashboard, KPR calculator, 100+ RPG item master data.
 
-**Shota Base v2.x.x**
+**Shota Base v2.x.x** *(2024)*
+Modular plugin system, migration to pairing code, multi-owner, SQLite database.
 
 **v1.x.x** *(2023)*
-Sistem case switch, database JSON, fitur dasar sticker & ping.
+Switch-case system, JSON database, basic features: sticker, ping, eval.
 
-**Awal** *(2022)*
+**Early Days** *(2022)*
+First experiments with Baileys. Name and structure changed frequently.
 
 ---
 
-## Lisensi
+## Contributing
+
+This repository is **private** and does not accept public contributions. For those with access, follow standard plugin development guidelines and commit conventions.
+
+Report bugs with: command used, error output, reproduction steps, Node.js version and OS.
+
+---
+
+## License
 
 ```
 PRIVATE PROJECT — All Rights Reserved
 Copyright (c) 2022–2026 DropByte MSG
 
-Tidak untuk didistribusikan atau dipublikasikan tanpa izin.
+Not for distribution or publication without permission.
 ```
 
 ---
 
 ## Credits
 
-[@whiskeysockets/baileys](https://github.com/WhiskeySockets/Baileys) — protokol WhatsApp · Shota Base — fondasi arsitektur · jarr — developer base
+[@whiskeysockets/baileys](https://github.com/WhiskeySockets/Baileys) — WhatsApp protocol · Shota Base — architecture foundation · jarr — base developer
 
 ---
 
@@ -329,9 +436,15 @@ Tidak untuk didistribusikan atau dipublikasikan tanpa izin.
 
 <br>
 
+```
+  ✦ ✦ ✦
+```
+
 **DropByte MSG**
 
-*2022 – 2026 · Still in Development*
+*2022 – 2026 · Still in Development · Built with ❤️*
+
+*"Not perfect, but always improving."*
 
 <br>
 
