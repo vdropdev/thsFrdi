@@ -56,6 +56,47 @@ Runtime yang digunakan adalah **Node.js v18+** dengan protokol **@whiskeysockets
 
 ---
 
+## Struktur Proyek
+
+```
+dropbyte-msg/
+│
+├── index.js          — Entry point, koneksi Baileys, pairing code
+├── settings.js       — Konfigurasi global (nama bot, owner, gambar, dll)
+├── case.js           — Fallback command sederhana (switch-case)
+│
+├── src/
+│   ├── handler.js    — Message handler utama, routing, logging terminal
+│   └── plugins.js    — Plugin loader rekursif, stats, getMenuData
+│
+├── lib/
+│   ├── config.js     — Serializer pesan Baileys → objek m
+│   ├── database.js   — SQLite helper (users, groups, settings)
+│   ├── function.js   — Utility functions global
+│   ├── items.js      — Master data item RPG + emoji konsisten
+│   ├── rpg-json.js   — RPG database JSON helper
+│   └── webp.js       — Konversi media ke WebP untuk sticker
+│
+├── plugins/
+│   ├── command/      — Perintah utama (.menu)
+│   ├── owner/        — Perintah khusus owner
+│   ├── files/        — File & plugin manager via WA
+│   ├── other/        — Fitur umum (ping, sticker, menfess, dll)
+│   ├── tools/        — Konversi media
+│   ├── grup/         — Manajemen grup
+│   ├── rpg/          — Sistem RPG & ekonomi
+│   ├── pajak/        — Kalkulator perpajakan
+│   ├── akuntansi/    — Akuntansi & perbankan
+│   └── mahasiswa/    — Tools akademik mahasiswa
+│
+├── data/
+│   ├── database.db   — SQLite (auto-created)
+│   ├── rpg.json      — Data RPG JSON (auto-created)
+│   └── owner.json    — Daftar owner tambahan
+│
+└── Auth/             — Session Baileys (auto-created saat pairing)
+```
+---
 ## Fitur
 
 | | Kategori | Deskripsi |
